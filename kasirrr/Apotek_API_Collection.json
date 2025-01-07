@@ -1,0 +1,247 @@
+{
+  "info": {
+    "name": "Apotek API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "username": "admin",
+                "password": "password123"
+              }
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/auth/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pengguna",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/users?role=all"
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/users",
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "username": "newuser",
+                "password": "pass123",
+                "nama": "User Baru",
+                "role": "kasir",
+                "email": "user@apotek.com"
+              }
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/users/:id"
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/users/:id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Kategori",
+      "item": [
+        {
+          "name": "Get All Kategori",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/kategori"
+          }
+        },
+        {
+          "name": "Create Kategori",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/kategori",
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "nama": "Kategori Baru",
+                "deskripsi": "Deskripsi kategori"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Produk",
+      "item": [
+        {
+          "name": "Get All Produk",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/produk?search=&kategori=&stok=low"
+          }
+        },
+        {
+          "name": "Create Produk",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/produk",
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "kode": "PRD001",
+                "nama": "Produk Baru",
+                "kategori_id": "1",
+                "harga_beli": 10000,
+                "harga_jual": 15000,
+                "stok": 100
+              }
+            }
+          }
+        },
+        {
+          "name": "Update Stok",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/produk/:id/stok",
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "stok": 150,
+                "keterangan": "Penambahan stok"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Manajemen Stok",
+      "item": [
+        {
+          "name": "Stock Opname",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/stok/opname",
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "produk_id": "1",
+                "stok_sistem": 100,
+                "stok_fisik": 98,
+                "catatan": "Selisih stok"
+              }
+            }
+          }
+        },
+        {
+          "name": "Riwayat Stok",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/stok/riwayat?produk_id=1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transaksi",
+      "item": [
+        {
+          "name": "Create Transaksi",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/transaksi",
+            "body": {
+              "mode": "raw",
+              "raw": {
+                "items": [
+                  {
+                    "produk_id": "1",
+                    "jumlah": 2,
+                    "harga": 7000
+                  }
+                ],
+                "total": 14000,
+                "bayar": 15000
+              }
+            }
+          }
+        },
+        {
+          "name": "Get Transaksi",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/transaksi?start_date=2024-01-01&end_date=2024-01-31"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Laporan",
+      "item": [
+        {
+          "name": "Laporan Penjualan",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/laporan/penjualan?periode=harian&tanggal=2024-01-01"
+          }
+        },
+        {
+          "name": "Laporan Stok",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/laporan/stok?jenis=minimum"
+          }
+        },
+        {
+          "name": "Laporan Laba Rugi",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/laporan/laba-rugi?bulan=1&tahun=2024"
+          }
+        },
+        {
+          "name": "Export Laporan",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/laporan/export?jenis=penjualan&format=excel"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api"
+    }
+  ]
+} 

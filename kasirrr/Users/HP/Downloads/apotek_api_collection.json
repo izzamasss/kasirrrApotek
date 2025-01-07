@@ -1,0 +1,112 @@
+{
+    "info": {
+      "_postman_id": "your-collection-id",
+      "name": "Apotek API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Auth",
+        "item": [
+          {
+            "name": "Login",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\"\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/auth/login",
+                "host": ["{{base_url}}"],
+                "path": ["auth", "login"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Produk",
+        "item": [
+          {
+            "name": "Get All Produk",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                }
+              ],
+              "url": {
+                "raw": "{{base_url}}/produk",
+                "host": ["{{base_url}}"],
+                "path": ["produk"]
+              }
+            }
+          },
+          {
+            "name": "Create Produk",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"barcode\": \"8991234567890\",\n    \"nama\": \"Paracetamol\",\n    \"deskripsi\": \"Obat untuk menurunkan demam\",\n    \"harga_beli\": 5000,\n    \"harga_jual\": 7000,\n    \"stok\": 100,\n    \"kategori\": \"Obat Bebas\"\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/produk",
+                "host": ["{{base_url}}"],
+                "path": ["produk"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Transaksi",
+        "item": [
+          {
+            "name": "Create Transaksi",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json" 
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"no_transaksi\": \"TRX-20240101-001\",\n    \"tanggal\": \"2024-01-01 10:00:00\",\n    \"total\": 14000,\n    \"bayar\": 15000,\n    \"kembalian\": 1000,\n    \"items\": [\n        {\n            \"produk_id\": \"1\",\n            \"jumlah\": 2,\n            \"harga\": 7000,\n            \"subtotal\": 14000\n        }\n    ]\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/transaksi",
+                "host": ["{{base_url}}"],
+                "path": ["transaksi"]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }

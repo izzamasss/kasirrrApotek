@@ -1,0 +1,18 @@
+1. tambah outlet table (id, name, address)
+2. tambah outlets_users table (id, outlet_id, user_id)
+3. tambah outlet_id di tableerer
+    - categories
+    - products
+    - discount
+    - orders
+4. check request di masing" tempat (berdasarkan outlet_id)
+   - user crud panel
+   - user crud api
+   - categories crud panel
+   - categories crud api
+   - products crud panel
+   - products crud api
+   - discount crud panel
+   - discount crud api
+   - order crud panel
+   - order crud api
