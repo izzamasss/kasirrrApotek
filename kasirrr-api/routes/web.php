@@ -21,5 +21,5 @@ use App\Models\Outlet;
 */
 
 Route::get('/', function () {
-    return view('pages.auth.login');
+    return abort(404);
 });

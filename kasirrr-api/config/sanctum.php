@@ -61,7 +61,7 @@ return [
     |
     */
 
-    'token_prefix' => env('SANCTUM_TOKEN_PREFIX', 'skuy_'),
+    'token_prefix' => env('SANCTUM_TOKEN_PREFIX', 'kasir_'),
 
     /*
     |--------------------------------------------------------------------------

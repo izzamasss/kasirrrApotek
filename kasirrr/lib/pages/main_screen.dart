@@ -1,3 +1,4 @@
+import 'package:apotek/constants/app_color.dart';
 import 'package:apotek/constants/extensions.dart';
 import 'package:apotek/constants/variable.dart';
 import 'package:apotek/utils/shared_pref_util.dart';
@@ -123,8 +124,13 @@ class _MainScreenState extends State<MainScreen> {
           const SizedBox(width: 10),
         ],
       ),
-      body: Row(
+      body: Stack(
         children: [
+          Container(
+            color: Colors.grey[100],
+            child: _menus[_selectedIndex].page,
+          ),
+          Container(color: _isDrawerOpen ? AppColor.black.withOpacity(0.3) : null),
           AnimatedContainer(
             onEnd: () => setState(() {
               _isAnimationDrawerFinished = true;
@@ -154,12 +160,6 @@ class _MainScreenState extends State<MainScreen> {
                   );
                 }),
               ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              color: Colors.grey[100],
-              child: _menus[_selectedIndex].page,
             ),
           ),
         ],
