@@ -20,7 +20,7 @@ Route::post('/login', [App\Http\Controllers\Api\AuthController::class, 'login'])
 // crud pengguna
 Route::get('/pengguna', [App\Http\Controllers\Api\AuthController::class, 'show']);
 Route::post('/pengguna', [App\Http\Controllers\Api\AuthController::class, 'create']);
-Route::put('/pengguna/foto/{id}', [App\Http\Controllers\Api\AuthController::class, 'changeFotoProfil']);
+Route::post('/pengguna/foto/{id}', [App\Http\Controllers\Api\AuthController::class, 'changeFotoProfil']);
 Route::put('/pengguna/reset-password/{id}', [App\Http\Controllers\Api\AuthController::class, 'resetPassword']);
 Route::put('/pengguna/change-status/{id}', [App\Http\Controllers\Api\AuthController::class, 'changeStatus']);
 Route::put('/pengguna/{id}', [App\Http\Controllers\Api\AuthController::class, 'update']);

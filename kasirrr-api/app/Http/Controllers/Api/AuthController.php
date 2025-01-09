@@ -91,15 +91,21 @@ class AuthController extends Controller
     {
         // validate the request...
         $request->validate([
-            'foto_profile' => 'required|image',
+            'foto_profile' => 'nullable|image',
+            'nama' => 'required',
+            'email' => 'required|email',
+            'telepon' => 'nullable',
         ]);
+        $data = Pengguna::findOrFail($request->id);
         if ($request->hasFile('foto_profile')) {
-            $data = Pengguna::findOrFail($request->id);
             $path = $request->file('foto_profile')->store('images');
             $data->foto_profile = $path;
-            $data->save();
-            return returnJson($data, 200);
         }
+        $data->nama = $request->nama;
+        $data->email = $request->email;
+        $data->telepon = $request->telepon;
+        $data->save();
+        return returnJson($data, 200);
         // $data = [];
         // $data['foto'] = $request->hasFile('foto_profile');
 

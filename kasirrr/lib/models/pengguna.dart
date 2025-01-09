@@ -1,3 +1,5 @@
+import 'package:apotek/constants/variable.dart';
+
 class Pengguna {
   final String? id;
   final String? username;
@@ -26,6 +28,8 @@ class Pengguna {
   });
 
   bool get isAdmin => role == 'admin';
+
+  String? get foto => (fotoProfile ?? '').contains('http') ? fotoProfile : '${Variable.serverUrl}/uploads/$fotoProfile';
 
   factory Pengguna.fromJson(Map<String, dynamic> json) {
     return Pengguna(

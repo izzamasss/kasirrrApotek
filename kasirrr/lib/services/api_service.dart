@@ -8,6 +8,7 @@ import 'package:apotek/models/summary.dart';
 import 'package:apotek/models/transaksi.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import '../models/produk.dart';
 import '../models/pengguna.dart';
 
@@ -234,92 +235,26 @@ class ApiService {
     return null;
   }
 
-  // TODO: updateProfile API
-  Future<bool> updateProfile({
+  Future<Pengguna?> updateProfile({
     required String id,
     required String nama,
     required String email,
     required String telepon,
-    String? fotoProfile,
+    XFile? fotoProfile,
   }) async {
-    //  'username' => 'required',
-    // 'nama' => 'required',
-    // 'role' => 'required',
-    // 'email' => 'required',
-    // 'telepon' => 'nullable',
-    // 'foto_profile' => 'nullable|image',
-    final user = Variable.pengguna;
-    final pengguna = Pengguna(
-      id: user?.id,
-      username: user?.username,
-      nama: nama,
-      role: user?.role,
-      email: email,
-      telepon: telepon,
-    );
-    final response = await http.put(
-      Uri.parse('$baseUrl/pengguna/$id'),
-      headers: headers,
-      body: json.encode(pengguna.toJson()),
-    );
+    var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/pengguna/foto/$id'));
+    request.fields.addAll({
+      'nama': nama,
+      'email': email,
+      'telepon': telepon,
+    });
+    request.headers.addAll({'Content-Type': 'multipart/form-data'});
+    if (fotoProfile != null) request.files.add(await http.MultipartFile.fromPath('foto_profile', fotoProfile.path));
 
-    return response.statusCode == 200;
-    // var request = http.MultipartRequest('PUT', Uri.parse('$baseUrl/pengguna/$id'))
-    //   // ..fields.addAll({
-    //   //   'nama': nama,
-    //   //   'email': email,
-    //   //   'telepon': telepon,
-    //   // })
-    //   ..headers.addAll({'Content-Type': 'multipart/form-data'});
-    // if (fotoProfile != null) {
-    //   request.files.add(await http.MultipartFile.fromPath('foto_profile', fotoProfile));
-    // }
-    // final response = await request.send();
-    // print(['------- update profile', response.statusCode]);
-    // return response.statusCode == 200;
-
-    // final response = await http.put(
-    //   Uri.parse('$baseUrl/pengguna/$id'),
-    //   headers: await _getHeaders(),
-    //   body: jsonEncode({
-    //     'nama': nama,
-    //     'email': email,
-    //     'telepon': telepon,
-    //     'foto_profile': fotoProfile,
-    //   }),
-    // );
-
-    // if (response.statusCode != 200) {
-    //   throw Exception('Gagal memperbarui profil');
-    // }
-
-    // final response = await http.put(
-    //   Uri.parse('$baseUrl/pengguna/$id'),
-    //   headers: headers,
-    //   body: json.encode({
-    //     'foto_profile': http.MultipartFile(File(fotoProfile!), filename: 'foto_profile'),
-    //     'nama': nama,
-    //     'email': email,
-    //     'telepon': telepon,
-    //   }),
-    // );
-    // var request = http.MultipartRequest('PUT', Uri.parse('$baseUrl/pengguna/$id'));
-    // ..fields.addAll({
-    //   'nama': nama,
-    //   'email': email,
-    //   'telepon': telepon,
-    // });
-    // final File file = File(fotoProfile ?? '');
-    // request.headers.addAll({'Content-Type': 'multipart/form-data'});
-    // request.files.add(http.MultipartFile('foto_profile', file.readAsBytes().asStream(), file.lengthSync()));
-    // final response = await request.send();
-    // print(['------- update profile', response.statusCode]);
-    // return response.statusCode == 200;
-    // if (response.statusCode == 200) {
-    //   return const Right(true);
-    // } else {
-    //   return const Left('Failed to update pengguna');
-    // }
+    final response = await request.send();
+    final String body = await response.stream.bytesToString();
+    final user = Pengguna.fromJson(jsonDecode(body)['data']);
+    return user;
   }
 
   // Tambahkan method untuk export laporan
@@ -384,7 +319,7 @@ class ApiService {
     final response = await http.post(
       Uri.parse('$baseUrl/logStok'),
       headers: headers,
-      body: json.encode(logStok.toJson()),
+      body: logStok.toJson(),
     );
     if (response.statusCode == 201) {
       return const Right(true);

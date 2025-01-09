@@ -1,7 +1,7 @@
 import 'package:apotek/constants/app_color.dart';
 import 'package:apotek/constants/variable.dart';
-import 'package:apotek/models/pengguna.dart';
 import 'package:apotek/widgets/button.dart';
+import 'package:apotek/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -19,6 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _isEditing = false;
   bool _isLoading = false;
   String? imageUrl;
+  XFile? _imageXFile;
   File? _imageFile;
   final ImagePicker _picker = ImagePicker();
   final _apiService = ApiService();
@@ -37,7 +38,8 @@ class _ProfilePageState extends State<ProfilePage> {
     _emailController.text = Variable.pengguna?.email ?? '';
     setState(() {
       _imageFile = null;
-      imageUrl = Variable.pengguna?.fotoProfile;
+      _imageXFile = null;
+      imageUrl = Variable.pengguna?.foto;
     });
   }
 
@@ -52,6 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (pickedFile != null) {
         setState(() {
           _imageFile = File(pickedFile.path);
+          _imageXFile = pickedFile;
         });
       }
     } catch (e) {
@@ -91,48 +94,25 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _saveProfile() async {
     setState(() => _isLoading = true);
-    // try {
-    // Implementasi logika penyimpanan profil
-    // final res = await _apiService.updateProfile(
-    //   id: Variable.pengguna?.id ?? '',
-    //   nama: _namaController.text,
-    //   email: _emailController.text,
-    //   telepon: _telpController.text,
-    //   fotoProfile: _imageFile?.path,
-    // );
-    final user = Variable.pengguna;
-    // final pengguna = Pengguna(
-    //   id: user?.id,
-    //   username: user?.username,
-    //   nama: _namaController.text,
-    //   email: _emailController.text,
-    //   telepon: _telpController.text,
-    //   role: user?.role,
-    // );
-
-    final pengguna = Pengguna(
-      id: '',
-      username: user?.username,
+    final res = await _apiService.updateProfile(
+      id: Variable.pengguna?.id ?? '',
       nama: _namaController.text,
       email: _emailController.text,
       telepon: _telpController.text,
-      role: user?.role,
-      password: null,
-      createdAt: DateTime.now(),
+      fotoProfile: _imageXFile,
     );
-    final res = await _apiService.updatePengguna(user?.id ?? '', pengguna);
     setState(() => _isLoading = false);
-    debugPrint('-----res $res');
     if (!mounted) return;
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   const SnackBar(content: Text('Profil berhasil diperbarui')),
-    // );
-    // } catch (e) {
-    //   setState(() => _isLoading = false);
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Gagal memperbarui profil: ${e.toString()}')),
-    //   );
-    // }
+    if (res != null) {
+      setState(() {
+        Variable.pengguna = res;
+        imageUrl = Variable.pengguna?.foto;
+      });
+
+      showToast(context, e: 'Profil berhasil diperbarui');
+    } else {
+      showToastError(context, e: 'Profil gagal diperbarui');
+    }
   }
 
   @override
@@ -162,12 +142,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     CircleAvatar(
                       radius: 75,
                       backgroundColor: AppColor.primary.withOpacity(0.2),
-                      // backgroundImage: _imageFile != null ? FileImage(_imageFile!) as ImageProvider : null,
-                      child: _imageFile != null
-                          ? Image.file(_imageFile!, fit: BoxFit.fill)
-                          : (imageUrl != null && imageUrl != '')
-                              ? Image.network(imageUrl!, fit: BoxFit.fill, errorBuilder: (_, __, ___) => defIcon)
-                              : defIcon,
+                      child: !_isEditing
+                          ? Image.network(imageUrl ?? '', errorBuilder: (_, __, ___) => defIcon)
+                          : _imageFile != null
+                              ? Image.file(_imageFile!, fit: BoxFit.fill)
+                              : (imageUrl != null && imageUrl != '')
+                                  ? Image.network(imageUrl!, fit: BoxFit.fill, errorBuilder: (_, __, ___) => defIcon)
+                                  : defIcon,
                     ),
                     if (_isEditing)
                       Positioned(
